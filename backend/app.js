@@ -7,7 +7,7 @@ const userRoutes = require('./routes/user');
 const app = express();
 
 const password = 'AjdiVFdImjV7Lic5';
-const queryString = `mongodb+srv://marko:${password}@cluster0-tiqpu.mongodb.net/mean-app?retryWrites=true&w=majority`;
+const queryString = `mongodb+srv://marko:${password}@cluster0-tiqpu.mongodb.net/mean-app`;
 
 mongoose
   .connect(queryString)

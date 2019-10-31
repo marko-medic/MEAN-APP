@@ -20,6 +20,7 @@ export class PostListComponent implements OnInit, OnDestroy {
     options: [1, 2, 5, 10]
   };
   isUserAuth = false;
+  userId: string;
   private postsSub: Subscription;
   private authSub: Subscription;
 
@@ -56,6 +57,7 @@ export class PostListComponent implements OnInit, OnDestroy {
       this.paging.rowsPerPage
     );
     this.isLoading = true;
+    this.userId = this.authService.getUserId();
     this.postsSub = this.postsService
       .getUpdateListener()
       .subscribe((resp: { data: any[]; maxPosts: number }) => {
@@ -65,6 +67,7 @@ export class PostListComponent implements OnInit, OnDestroy {
       });
     this.authSub = this.authService.getAuthSubject().subscribe(isAuth => {
       this.isUserAuth = isAuth; // problematicno jer kasni (onInit se poziva tek kada se prikaze stranica)
+      this.userId = this.authService.getUserId();
     });
     this.isUserAuth = this.authService.getIsAuth();
     // isto vazi i za header (kasni)

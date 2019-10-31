@@ -38,7 +38,8 @@ router.post(
     const post = new PostModel({
       title: req.body.title,
       content: req.body.content,
-      imagePath: `${url}/images/${req.file.filename}` // multer obezbedjuje file.filename
+      imagePath: `${url}/images/${req.file.filename}`, // multer obezbedjuje file.filename,
+      authorId: req.userData.id
     });
     post.save().then(savedPost => {
       res.status(201).json({
@@ -52,11 +53,18 @@ router.post(
 router.delete('/:id', checkAuth, (req, res, next) => {
   const id = req.params.id;
   PostModel.deleteOne({
-    _id: id
-  }).then(() => {
-    res.status(200).json({
-      message: 'Post deleted'
-    });
+    _id: id,
+    authorId: req.userData.id
+  }).then(result => {
+    if (result.n > 0) {
+      res.status(200).json({
+        message: 'Post deleted'
+      });
+    } else {
+      res.status(401).json({
+        message: 'Not authorized'
+      });
+    }
   });
 });
 
@@ -76,32 +84,51 @@ router.put(
       _id: id, // mora _id jer je _id immutable
       title: req.body.title,
       content: req.body.content,
-      imagePath
+      imagePath,
+      authorId: req.userData.id
     });
 
-    PostModel.updateOne({ _id: id }, post).then(() => {
-      res.status(200).json({
-        message: 'Post updated',
-        post
+    PostModel.updateOne({ _id: id, authorId: req.userData.id }, post)
+      .then(result => {
+        if (result.nModified > 0) {
+          res.status(200).json({
+            message: 'Post updated',
+            post
+          });
+        } else {
+          res.status(401).json({
+            message: 'Not authorized'
+          });
+        }
+      })
+      .catch(() => {
+        res.status(500).json({
+          message: 'Post updating failed'
+        });
       });
-    });
   }
 );
 
 router.get('/:id', (req, res, next) => {
   const id = req.params.id;
-  PostModel.findById(id).then(post => {
-    if (post) {
-      res.status(200).json({
-        message: 'Post found',
-        post
+  PostModel.findById(id)
+    .then(post => {
+      if (post) {
+        res.status(200).json({
+          message: 'Post found',
+          post
+        });
+      } else {
+        res.status(404).json({
+          message: 'Post not found'
+        });
+      }
+    })
+    .catch(() => {
+      res.status(500).json({
+        message: 'Getting post failed'
       });
-    } else {
-      res.status(404).json({
-        message: 'Post not found'
-      });
-    }
-  });
+    });
 });
 
 // moze i use umesto get
@@ -123,6 +150,11 @@ router.get('', (req, res, next) => {
         message: 'Posts fetched',
         data: fetchedPosts,
         maxPosts: count
+      });
+    })
+    .catch(() => {
+      res.status(500).json({
+        message: 'Fetching posts failed'
       });
     });
 });

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { NgForm } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { AuthData } from '../authData.model';
@@ -8,8 +9,9 @@ import { AuthData } from '../authData.model';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, OnDestroy {
   isLoading = false;
+  private authSub: Subscription;
   constructor(private authService: AuthService) {}
 
   onFormSubmit(form: NgForm) {
@@ -22,5 +24,19 @@ export class LoginComponent {
     };
     this.isLoading = true;
     this.authService.loginUser(authData);
+  }
+  ngOnInit() {
+    this.authSub = this.authService.getAuthSubject().subscribe(
+      isAuth => {
+        this.isLoading = false;
+      },
+      error => {
+        this.isLoading = false;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this.authSub.unsubscribe();
   }
 }

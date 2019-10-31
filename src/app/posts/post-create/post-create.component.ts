@@ -1,25 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Post } from '../post.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PostsService } from '../posts.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { mimeType } from './mime-type.validator.ts';
+import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-post-create',
   templateUrl: './post-create.component.html',
   styleUrls: ['./post-create.component.css']
 })
-export class PostCreateComponent implements OnInit {
+export class PostCreateComponent implements OnInit, OnDestroy {
   post: Post;
   isLoading = false;
   form: FormGroup;
   imageString: string;
   private mode = 'create';
   private id: string;
+  private authSubscription: Subscription;
 
   constructor(
     private postsService: PostsService,
+    private authService: AuthService,
     private route: ActivatedRoute
   ) {}
 
@@ -31,7 +35,8 @@ export class PostCreateComponent implements OnInit {
     const post: Post = {
       title: this.form.value.title,
       content: this.form.value.content,
-      imagePath: this.form.value.image
+      imagePath: this.form.value.image,
+      authorId: null
     };
 
     if (this.mode === 'create') {
@@ -54,6 +59,9 @@ export class PostCreateComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.authSubscription = this.authService.getAuthSubject().subscribe(() => {
+      this.isLoading = false;
+    });
     this.form = new FormGroup({
       title: new FormControl(null, {
         validators: [Validators.required, Validators.minLength(3)]
@@ -78,7 +86,8 @@ export class PostCreateComponent implements OnInit {
             id: resp.post._id,
             title: resp.post.title,
             content: resp.post.content,
-            imagePath: resp.post.imagePath
+            imagePath: resp.post.imagePath,
+            authorId: resp.post.authorId
           };
 
           this.form.setValue({
@@ -92,5 +101,8 @@ export class PostCreateComponent implements OnInit {
         this.id = null;
       }
     });
+  }
+  ngOnDestroy() {
+    this.authSubscription.unsubscribe();
   }
 }

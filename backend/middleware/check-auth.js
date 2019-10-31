@@ -5,7 +5,9 @@ const checkAuth = (req, res, next) => {
     // pravilo - Bearer 2131asdasda u hederu
     const token = req.headers.authorization.split(' ')[1];
 
-    jwt.verify(token, 'some_secret_key'); // baca izuzetak ako ne postoji (kao i linija iznad)
+    const decodedToken = jwt.verify(token, 'some_secret_key'); // baca izuzetak ako ne postoji (kao i linija iznad)
+    // takodje vraca i {email, id}
+    req.userData = decodedToken; // zakaci userData za req
     next();
   } catch (error) {
     res.status(401).json({

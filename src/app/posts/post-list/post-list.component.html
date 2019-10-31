@@ -6,7 +6,7 @@
     <div class="image-preview">
       <img [src]="post.imagePath" [alt]="post.title" />
     </div>
-    <mat-action-row *ngIf="isUserAuth">
+    <mat-action-row *ngIf="isUserAuth && userId === post.authorId">
       <a [routerLink]="['edit', post.id]" mat-button color="accent">EDIT</a>
       <button mat-button color="warn" (click)="onDeletePost(post.id)">
         DELETE

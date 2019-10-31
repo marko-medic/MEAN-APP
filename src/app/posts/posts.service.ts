@@ -37,6 +37,7 @@ export class PostsService {
             title: post.title,
             content: post.content,
             imagePath: post.imagePath,
+            authorId: post.authorId,
             id: post._id
           })),
           maxPosts: resp.maxPosts
