@@ -12,6 +12,7 @@ import { AuthData } from '../authData.model';
 export class SignupComponent implements OnInit, OnDestroy {
   isLoading = false;
   private authSub: Subscription;
+
   constructor(private authService: AuthService) {}
 
   onFormSubmit(form: NgForm) {

@@ -97,7 +97,7 @@ export class AuthService {
     }, expiresIn * 1000);
   }
 
-  autoAuthUser() {
+  autoAuthUser(): void {
     const authInformation = this.getStoredAuthInfo();
     if (!authInformation) {
       return;

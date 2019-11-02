@@ -74,6 +74,7 @@ export class PostCreateComponent implements OnInit, OnDestroy {
         asyncValidators: [mimeType]
       })
     });
+
     this.route.paramMap.subscribe((paramMap: ParamMap) => {
       if (paramMap.has('id')) {
         this.mode = 'update';

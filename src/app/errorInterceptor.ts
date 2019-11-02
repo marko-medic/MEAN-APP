@@ -13,6 +13,7 @@ import { ErrorComponent } from './error/error.component';
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
   constructor(private matDialog: MatDialog) {}
+
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     let errMsg = 'An unknown error occurred';
     return next.handle(req).pipe(

@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const postsRoutes = require('./routes/posts');
 const userRoutes = require('./routes/user');
+
 const app = express();
 
 const queryString = `mongodb+srv://marko:${process.env.MONGO_ATLAS_PW}@cluster0-tiqpu.mongodb.net/mean-app`;

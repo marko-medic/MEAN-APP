@@ -57,7 +57,6 @@ export class PostListComponent implements OnInit, OnDestroy {
       this.paging.rowsPerPage
     );
     this.isLoading = true;
-    this.userId = this.authService.getUserId();
     this.postsSub = this.postsService
       .getUpdateListener()
       .subscribe((resp: { data: any[]; maxPosts: number }) => {
@@ -70,6 +69,7 @@ export class PostListComponent implements OnInit, OnDestroy {
       this.userId = this.authService.getUserId();
     });
     this.isUserAuth = this.authService.getIsAuth();
+    this.userId = this.authService.getUserId();
     // isto vazi i za header (kasni)
   }
 
