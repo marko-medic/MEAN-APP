@@ -4,6 +4,7 @@ import { Subject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Post } from './post.model';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 interface PostsData {
   message?: string;
@@ -16,7 +17,7 @@ interface PostData {
   post: any;
 }
 
-const url = 'http://localhost:3000/api/posts';
+const BACKEND_URL = `${environment.apiUrl}posts/`;
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +31,7 @@ export class PostsService {
   getPosts(page: number, pageSize: number): void {
     const queryString = `?page=${page}&pagesize=${pageSize}`;
     this.http
-      .get<PostsData>(url + queryString)
+      .get<PostsData>(BACKEND_URL + queryString)
       .pipe(
         map(resp => ({
           data: resp.data.map(post => ({
@@ -54,13 +55,13 @@ export class PostsService {
 
   addPost(post: Post): void {
     const formData = this.createFormData(post);
-    this.http.post<PostData>(url, formData).subscribe(() => {
+    this.http.post<PostData>(BACKEND_URL, formData).subscribe(() => {
       this.router.navigate(['/']);
     });
   }
 
   deletePost(id: string): Observable<object> {
-    return this.http.delete(`${url}/${id}`);
+    return this.http.delete(`${BACKEND_URL}/${id}`);
   }
 
   updatePost(id: string, post: Post): void {
@@ -72,7 +73,7 @@ export class PostsService {
       postData = post;
     }
 
-    this.http.put(`${url}/${id}`, postData).subscribe(() => {
+    this.http.put(`${BACKEND_URL}/${id}`, postData).subscribe(() => {
       // moze ovde da se updateuje lokalni niz postova ali nema smisla
       this.router.navigate(['/']);
     });
@@ -80,7 +81,7 @@ export class PostsService {
 
   // koristi se subscribe 'na drugoj strani'
   getPost(id: string): Observable<PostData> {
-    return this.http.get<PostData>(`${url}/${id}`);
+    return this.http.get<PostData>(`${BACKEND_URL}/${id}`);
   }
 
   getUpdateListener(): Observable<PostsData> {

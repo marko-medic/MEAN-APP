@@ -1,54 +1,25 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  MatInputModule,
-  MatButtonModule,
-  MatCardModule,
-  MatToolbarModule,
-  MatExpansionModule,
-  MatProgressSpinnerModule,
-  MatPaginatorModule,
-  MatDialogModule
-} from '@angular/material';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
-import { PostCreateComponent } from './posts/post-create/post-create.component';
 import { HeaderComponent } from './header/header.component';
-import { PostListComponent } from './posts/post-list/post-list.component';
 import { AppRoutingModule } from './app-routing.module';
-import { LoginComponent } from './auth/login/login.component';
-import { SignupComponent } from './auth/signup/signup.component';
 import { AuthInterceptor } from './auth/authInterceptor.service';
 import { ErrorInterceptor } from './errorInterceptor';
 import { ErrorComponent } from './error/error.component';
+import { AngularMaterialModule } from './angular-material.module';
+import { PostsModule } from './posts/posts.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    PostCreateComponent,
-    HeaderComponent,
-    PostListComponent,
-    LoginComponent,
-    SignupComponent,
-    ErrorComponent
-  ],
+  declarations: [AppComponent, HeaderComponent, ErrorComponent],
   imports: [
     BrowserModule,
-    ReactiveFormsModule,
-    FormsModule,
     BrowserAnimationsModule,
-    MatInputModule,
-    MatButtonModule,
-    MatCardModule,
-    MatToolbarModule,
-    MatExpansionModule,
     HttpClientModule,
     AppRoutingModule,
-    MatProgressSpinnerModule,
-    MatPaginatorModule,
-    MatDialogModule
+    AngularMaterialModule,
+    PostsModule
   ],
   // dodaj AuthInterecptor u sve ajax metode, ne diraj druge injected klase
   providers: [
