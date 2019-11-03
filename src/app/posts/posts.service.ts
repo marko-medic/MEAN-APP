@@ -96,7 +96,6 @@ export class PostsService {
       }
     }
     formData.set('image', post.imagePath, post.title);
-
     return formData;
   }
 }

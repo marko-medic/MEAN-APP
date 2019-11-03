@@ -2,6 +2,7 @@ const express = require('express');
 const checkAuth = require('../middleware/check-auth');
 const PostsController = require('../controllers/posts');
 const extractFile = require('../middleware/extract-file');
+
 const router = express.Router();
 
 // image je prop poslat iz angulara
